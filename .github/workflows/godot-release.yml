@@ -1,0 +1,48 @@
+on: [push]
+
+#on:
+#  push:
+    # Sequence of patterns matched against refs/tags
+#    tags:
+#      - 'v*' # Push events to matching v*, i.e. v1.0, v20.15.10
+
+name: Create Release Composite
+
+env:
+  GodotProjectName: GodotProject
+  ExportLinux: true
+  ExportWindows: true
+  ExportWeb: true
+
+jobs:
+  windows_release:
+    name: Create Windows Release
+    runs-on: ubuntu-latest
+    steps:
+      - name: Before
+        run: |
+          echo "Before Run"
+      - name: Build for Windows
+        uses: bbrieber/godot_build_release@main
+        with:
+          godot_project_name: 'GodotProject'
+          godot_build_config: 'windows'
+          upload_release: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build for Linux
+        uses: bbrieber/godot_build_release@main
+        with:
+          godot_project_name: 'GodotProject'
+          godot_build_config: 'linux'
+          upload_release: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Build for Web
+        uses: bbrieber/godot_build_release@main
+        with:
+          godot_project_name: 'GodotProject'
+          godot_build_config: 'web'
+          upload_release: false
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: After
+        run: |
+          echo "After Run"
