@@ -24,12 +24,6 @@ jobs:
           echo "Before Run"
       - name: Checkout code
         uses: actions/checkout@v2
-
-  Godot_release:
-    needs: prepare_release
-    name: Create Godot Release
-    runs-on: ubuntu-latest
-    steps:
       - name: Build for Windows
         uses: bbrieber/godot_build_release@main
         with:
