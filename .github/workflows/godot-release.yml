@@ -23,7 +23,6 @@ jobs:
     steps:
       - name: Create Release
         id: create_release
-        if: ${{ inputs.upload_release }}
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
