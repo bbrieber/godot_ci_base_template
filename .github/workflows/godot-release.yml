@@ -18,6 +18,24 @@ jobs:
   prepare_release:
     name: Create Godot Release
     runs-on: ubuntu-latest
+    outputs:
+      upload_url: ${{ steps.create_release.outputs.upload_url }}
+    steps:
+      - name: Create Release
+        id: create_release
+        if: ${{ inputs.upload_release }}
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ inputs.github_token }} # This token is provided by Actions, you do not need to create your own token
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+  build_release:
+    needs: prepare_release
+    name: Build Godot Release
+    runs-on: ubuntu-latest
     steps:
       - name: Before
         run: |
@@ -31,6 +49,7 @@ jobs:
           godot_build_config: 'windows'
           upload_release: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ needs.prepare_release.outputs.upload_url }}
       - name: Build for Linux
         uses: bbrieber/godot_build_release@main
         with:
@@ -38,6 +57,7 @@ jobs:
           godot_build_config: 'linux'
           upload_release: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ needs.prepare_release.outputs.upload_url }}
       - name: Build for Web
         uses: bbrieber/godot_build_release@main
         with:
@@ -45,6 +65,7 @@ jobs:
           godot_build_config: 'web'
           upload_release: false
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ needs.prepare_release.outputs.upload_url }}
       - name: After
         run: |
           echo "After Run"
