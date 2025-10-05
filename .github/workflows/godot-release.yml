@@ -15,8 +15,8 @@ env:
   ExportWeb: true
 
 jobs:
-  windows_release:
-    name: Create Windows Release
+  Godot_release:
+    name: Create Godot Release
     runs-on: ubuntu-latest
     steps:
       - name: Before
